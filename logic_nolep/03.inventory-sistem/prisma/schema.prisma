@@ -84,6 +84,10 @@ model Order {
   customerEmail String
   userId        String
   user          User     @relation(fields: [userId], references: [id])
+
+  isActive Boolean @default(true)
+  deletedAt DateTime?
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
