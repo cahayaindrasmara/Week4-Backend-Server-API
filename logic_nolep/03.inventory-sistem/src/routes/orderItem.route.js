@@ -1,12 +1,9 @@
-import { Router } from "express";
-import OrderItemController from "../controllers/orderItem.controller.js";
+import { Router } from 'express';
+import OrderItemController from '../controllers/orderItem.controller.js';
 
 const router = Router();
 
-router
-    .route('/order-items')
-    .post(OrderItemController.createOrderItem)
-    .get(OrderItemController.getAllOrderItems)
+router.route('/order-items').post(OrderItemController.createOrderItem).get(OrderItemController.getAllOrderItems);
 
 router.put('/order-items/:id', OrderItemController.updateOrderItem);
 router.delete('/order-items/:id', OrderItemController.hardDeleteOrderItem);

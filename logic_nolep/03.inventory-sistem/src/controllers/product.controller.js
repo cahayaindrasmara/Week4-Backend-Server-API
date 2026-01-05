@@ -1,131 +1,154 @@
-import ProductService from "../services/product.service.js";
+import ProductService from '../services/product.service.js';
 
 class ProductController {
-    static async createProduct(req, res) {
-        const {name, description, price, quantityInStock, categoryId, userId} = req.body;
-        const parsedPrice = Number(price);
-        const parsedQuantityInStock = Number(quantityInStock)
+  static async createProduct(req, res) {
+    const { name, description, price, quantityInStock, categoryId, userId } = req.body;
+    const parsedPrice = Number(price);
+    const parsedQuantityInStock = Number(quantityInStock);
 
-        if (isNaN(parsedPrice) || isNaN(parsedQuantityInStock)) {
-            return res.status(400).json({
-                message: "Price dan Quantity Stock Harus Berupa Angka!!"
-            })
-        }
-
-        try {
-            const product = await ProductService.create({name, description, price: parsedPrice, quantityInStock: parsedQuantityInStock, categoryId, userId});
-
-            res.status(201).json({
-                message: "Product created successfully",
-                product
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: "Failed to create product!!"
-            })
-        }
+    if (isNaN(parsedPrice) || isNaN(parsedQuantityInStock)) {
+      return res.status(400).json({
+        message: 'Price dan Quantity Stock Harus Berupa Angka!!',
+      });
     }
 
-    static async updateProduct(req, res) {
-        const {id} = req.params;
-        const {name, description, price, quantityInStock, categoryId, userId} = req.body;
-        const parsedPrice = Number(price);
-        const parsedQuantityInStock = Number(quantityInStock)
+    try {
+      const product = await ProductService.create({
+        name,
+        description,
+        price: parsedPrice,
+        quantityInStock: parsedQuantityInStock,
+        categoryId,
+        userId,
+      });
 
-        try {
-            const product = await ProductService.update(id, {name, description, price: parsedPrice, quantityInStock: parsedQuantityInStock, categoryId, userId});
-
-            res.json({
-                message: "Product updated successfully",
-                product
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: "Failed to update product!!"
-            })
-        }
+      res.status(201).json({
+        message: 'Product created successfully',
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Failed to create product!!',
+      });
     }
+  }
 
-    static async hardDeleteProduct(req, res) {
-        const {id} = req.params;
+  static async updateProduct(req, res) {
+    const { id } = req.params;
+    const { name, description, price, quantityInStock, categoryId, userId } = req.body;
+    const parsedPrice = Number(price);
+    const parsedQuantityInStock = Number(quantityInStock);
 
-        try {
-            const product = await ProductService.hardDelete(id);
+    try {
+      const product = await ProductService.update(id, {
+        name,
+        description,
+        price: parsedPrice,
+        quantityInStock: parsedQuantityInStock,
+        categoryId,
+        userId,
+      });
 
-            res.json({
-                message: `Delete ${id} Product Successfully`
-            })
-        } catch (error) {
-            res.json({
-                message: `Failed to delete ${id} product!!`
-            })
-        }
+      res.json({
+        message: 'Product updated successfully',
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Failed to update product!!',
+      });
     }
+  }
 
-    static async softDelete(req, res) {
-        const {id} = req.params;
+  static async hardDeleteProduct(req, res) {
+    const { id } = req.params;
 
-        try {
-            const product = await ProductService.softDelete(id)
+    try {
+      const product = await ProductService.hardDelete(id);
 
-            res.json({
-                message: `Soft Delete ${id} Product Successfully`
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: `Failed to soft delete ${id} product!!`
-            })
-        }
+      res.json({
+        message: `Delete ${id} Product Successfully`,
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: `Failed to delete ${id} product!!`,
+      });
     }
+  }
 
-    static async getAllProduct(req, res) {
-        try {
-            const product = await ProductService.getAll();
+  static async softDelete(req, res) {
+    const { id } = req.params;
 
-            res.json({
-                message: "Get all products successfully",
-                product
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: "Failed to get all products!!"
-            })
-        }
+    try {
+      const product = await ProductService.softDelete(id);
+
+      res.json({
+        message: `Soft Delete ${id} Product Successfully`,
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: `Failed to soft delete ${id} product!!`,
+      });
     }
+  }
 
-    static async findProductByID(req, res) {
-        const {id} = req.params;
+  static async getAllProduct(req, res) {
+    try {
+      const product = await ProductService.getAll();
 
-        try {
-            const product = await ProductService.findByID(id);
-
-            res.json({
-                message: `Get Detail ${id} Product Successfully`,
-                product
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: `Failed to get detail ${id} product!!`
-            })
-        }
+      res.json({
+        message: 'Get all products successfully',
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: 'Failed to get all products!!',
+      });
     }
+  }
 
-    static async findProductByUser(req, res) {
-        const {userId} = req.params;
+  static async findProductByID(req, res) {
+    const { id } = req.params;
 
-        try {
-            const product = await ProductService.findByUser(userId);
+    try {
+      const product = await ProductService.findByID(id);
 
-            res.json({
-                message: `Get Detail User ${userId} Product Successfully`,
-                product
-            })
-        } catch (error) {
-            res.status(500).json({
-                message: `Failed to get detail user ${userId} product!!`
-            })
-        }
+      res.json({
+        message: `Get Detail ${id} Product Successfully`,
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: `Failed to get detail ${id} product!!`,
+      });
     }
+  }
+
+  static async findProductByUser(req, res) {
+    const { userId } = req.params;
+
+    try {
+      const product = await ProductService.findByUser(userId);
+
+      res.json({
+        message: `Get Detail User ${userId} Product Successfully`,
+        product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: `Failed to get detail user ${userId} product!!`,
+      });
+    }
+  }
 }
 
 export default ProductController;
