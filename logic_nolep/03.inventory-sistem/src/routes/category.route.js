@@ -11,6 +11,6 @@ router
 router.put('/categories/:id' , CategoryController.updateCategory);
 router.delete('/categories/:id', CategoryController.hardDeleteCategory);
 router.get('/categories/:id', CategoryController.findCategoryByID);
-router.patch('/categories/soft-delete/:id', CategoryController.softDeleteCategory);
+router.patch('/categories/:id', CategoryController.softDeleteCategory);
 
 export default router;

@@ -11,6 +11,6 @@ router
 router.put("/users/:id", UserController.updateUser);
 router.delete("/users/:id", UserController.hardDeleteUser);
 router.get("/users/:id", UserController.findUserByID);
-router.patch("/users/soft-delete/:id", UserController.softDeleteUser);
+router.patch("/users/:id", UserController.softDeleteUser);
 
 export default router;
