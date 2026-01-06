@@ -1,4 +1,5 @@
 import OrderItemService from '../services/orderItem.service.js';
+import logger from '../config/logger.js';
 
 class OrderItemController {
   static async createOrderItem(req, res) {
@@ -19,7 +20,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to create order!!',
       });
@@ -45,7 +46,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to update order item!!',
       });
@@ -63,7 +64,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to detele ${id} order item!!`,
       });
@@ -81,7 +82,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to soft delete ${id} order item!!`,
       });
@@ -97,7 +98,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to get all data order items!!',
       });
@@ -115,7 +116,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail ${id} order item!!`,
       });
@@ -133,7 +134,7 @@ class OrderItemController {
         orderItem,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail order ${orderId} order item!!`,
       });

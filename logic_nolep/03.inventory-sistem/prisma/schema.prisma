@@ -20,6 +20,7 @@ model User {
   password  String
   role      String   @default("user")
 
+  isEmailVerified Boolean @default(false)
   isActive Boolean @default(true)
   deletedAt DateTime?
 
@@ -79,6 +80,7 @@ model Product {
 
 model Order {
   id            String   @id @default(uuid())
+  date          DateTime @default(now())
   totalPrice    Float
   customerName  String
   customerEmail String

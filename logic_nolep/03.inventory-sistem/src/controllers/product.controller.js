@@ -1,4 +1,5 @@
 import ProductService from '../services/product.service.js';
+import logger from '../config/logger.js';
 
 class ProductController {
   static async createProduct(req, res) {
@@ -27,7 +28,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to create product!!',
       });
@@ -55,7 +56,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to update product!!',
       });
@@ -73,7 +74,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to delete ${id} product!!`,
       });
@@ -91,7 +92,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to soft delete ${id} product!!`,
       });
@@ -107,7 +108,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to get all products!!',
       });
@@ -125,7 +126,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail ${id} product!!`,
       });
@@ -143,7 +144,7 @@ class ProductController {
         product,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail user ${userId} product!!`,
       });

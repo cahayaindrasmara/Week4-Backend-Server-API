@@ -1,5 +1,6 @@
 import UserService from '../services/user.service.js';
 import bcrypt from 'bcryptjs';
+import logger from '../config/logger.js';
 
 class UserController {
   static async createUser(req, res) {
@@ -14,7 +15,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to created user!!',
       });
@@ -33,7 +34,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to updated user!!',
       });
@@ -51,7 +52,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to hard deleted user!!',
       });
@@ -69,7 +70,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to soft delete user!!',
       });
@@ -85,7 +86,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to get all user!!',
       });
@@ -103,7 +104,7 @@ class UserController {
         user,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail ${id} user`,
       });

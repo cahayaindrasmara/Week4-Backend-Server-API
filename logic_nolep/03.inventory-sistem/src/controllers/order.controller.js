@@ -1,4 +1,5 @@
 import OrderService from '../services/order.service.js';
+import logger from '../config/logger.js';
 
 class OrderController {
   static async createOrder(req, res) {
@@ -13,7 +14,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to create order!!',
       });
@@ -33,7 +34,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to update order!!',
       });
@@ -51,7 +52,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to detele ${id} order!!`,
       });
@@ -69,7 +70,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to soft delete ${id} order!!`,
       });
@@ -85,7 +86,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to get all data orders!!',
       });
@@ -103,7 +104,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail ${id} order!!`,
       });
@@ -121,7 +122,7 @@ class OrderController {
         order,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail user ${userId} order!!`,
       });

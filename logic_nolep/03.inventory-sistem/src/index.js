@@ -1,25 +1,27 @@
 import app from './app.js';
 import { prisma } from '../lib/prisma.js';
+import config from './config/config.js';
+import logger from './config/logger.js';
 
 let server;
-let port = 3000;
+let port = config.port;
 
 const startServer = async () => {
   try {
     await prisma.$connect();
-    console.log('Connected to Database');
+    logger.info('Connected to Database');
 
     server = app.listen(port, () => {
-      console.log(`Server listening on port http://localhost:${port}`);
+      logger.info(`Server listening on port http://localhost:${port}`);
     });
   } catch (error) {
-    console.error('Database connection failed', error);
+    logger.error('Database connection failed', error);
     process.exit(1); //program end karena error
   }
 };
 
 const shutdown = async () => {
-  console.log('Shutting down...');
+  logger.info('Shutting down...');
   if (server) {
     server.close();
   }

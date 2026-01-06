@@ -1,4 +1,5 @@
 import CategoryService from '../services/category.service.js';
+import logger from '../config/logger.js';
 
 class CategoryController {
   static async createCategory(req, res) {
@@ -12,7 +13,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to create category!!',
       });
@@ -31,7 +32,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to update category!!',
       });
@@ -49,7 +50,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to delete ${id} category!!`,
       });
@@ -67,7 +68,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to soft delete ${id} category!!`,
       });
@@ -83,7 +84,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: 'Failed to get all data categories!!',
       });
@@ -101,7 +102,7 @@ class CategoryController {
         category,
       });
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       res.status(500).json({
         message: `Failed to get detail ${id} category!!`,
       });
