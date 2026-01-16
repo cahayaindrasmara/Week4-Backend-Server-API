@@ -1,12 +1,9 @@
-import globals from 'globals';
-import js from '@eslint/js';
-import jest from 'eslint-plugin-jest';
-import security from 'eslint-plugin-security';
+const globals = require('globals');
+const js = require('@eslint/js');
+const jest = require('eslint-plugin-jest');
+const security = require('eslint-plugin-security');
 
-export default [
-  {
-    ignores: ['node_modules/**', 'bin/**', 'generated/**', 'prisma/**', '**/*.min.js'],
-  },
+module.exports = [
   {
     files: ['**/*.js'],
     languageOptions: {
@@ -14,22 +11,23 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.node,
-        ...globals.jest,
-      },
+        ...globals.jest
+      }
     },
     plugins: {
       jest,
-      security,
+      security
     },
     rules: {
       ...js.configs.recommended.rules,
       ...jest.configs.recommended.rules,
       ...security.configs.recommended.rules,
+      'no-console': 'warn',
       'no-unused-vars': 'warn',
       'no-undef': 'warn',
       'security/detect-non-literal-fs-filename': 'off',
       'jest/expect-expect': 'off',
       'security/detect-object-injection': 'off',
-    },
-  },
+    }
+  }
 ];
