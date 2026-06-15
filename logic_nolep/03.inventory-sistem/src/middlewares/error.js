@@ -2,12 +2,11 @@ import status from 'http-status';
 import config from '../config/config.js';
 import logger from '../config/logger.js';
 import ApiError from '../utils/ApiError.js';
-import { prisma } from '../../lib/prisma.js';
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
 
-  if (!(error instanceof ApiError)) {
+  if (!error.isApiError) {
     //if errorm from axios or http request
     if (error.response) {
       const message = err.response.data.message || err.response.data;
@@ -15,18 +14,42 @@ const errorConverter = (err, req, res, next) => {
 
       logger.info('handleAxiosError');
       error = new ApiError(statusCode, message, false, err.stack);
-    } else if (err instanceof prisma.PrismaClientKnownRequestError) {
+    } else if (error.code && error.code.startsWith('P')) {
       //handle initialization errors (e.g., connection issues)
-      error = new ApiError(500, 'Prisma Initialization Error: Database Connection Issues');
+      // error = new ApiError(500, 'Prisma Initialization Error: Database Connection Issues');
+      error = handlePrismaClientError(error)
     } else {
       //handling global error
-      const statusCode = error.statusCode;
+      const statusCode = error.statusCode || status.INTERNAL_SERVER_ERROR;
       const message = error.message || status[statusCode];
       error = new ApiError(statusCode, message, false, err.stack);
     }
   }
   next(error);
 };
+
+// const errorConverter = (err, req, res, next) => {
+//   let error = err;
+
+//   if (!(error instanceof ApiError)) {
+//     let statusCode = status.INTERNAL_SERVER_ERROR;
+//     let message = error.message || status[statusCode];
+
+//     if (error.response) {
+//       statusCode = error.response.status;
+//       message = error.response.data?.message || error.response.data;
+//     } 
+//     else if (error instanceof Prisma.PrismaClientKnownRequestError) {
+//       statusCode = status.BAD_REQUEST;
+//       message = error.message;
+//     }
+
+//     error = new ApiError(statusCode, message, false, err.stack);
+//   }
+
+//   next(error);
+// };
+
 
 const handlePrismaClientError = (err) => {
   switch (err.code) {

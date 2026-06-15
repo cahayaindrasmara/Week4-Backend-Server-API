@@ -1,115 +1,71 @@
 import UserService from '../services/user.service.js';
-import bcrypt from 'bcryptjs';
-import logger from '../config/logger.js';
+import catchAsync from '../utils/catchAsyncs.js';
+import {status} from 'http-status';
+import ApiError from '../utils/ApiError.js';
 
 class UserController {
-  static async createUser(req, res) {
-    const { name, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
+  static createUser = catchAsync(async (req, res) => {
+    const user = await UserService.createUser(req.body);
 
-    try {
-      const user = await UserService.create({ name, email, password: hashedPassword });
+    res.status(status.CREATED).send({
+      status: status.CREATED,
+      message: "Create User Success",
+      data: user
+    });
+  });
 
-      res.status(201).json({
-        message: 'User Created Successfully',
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to created user!!',
-      });
+  static getUsers = catchAsync(async (req, res) => {
+    const users = await UserService.queryUsers();
+
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Users Success",
+      data: users
+    });
+  });
+
+  static getUserById = catchAsync(async (req, res) => {
+    const user = await UserService.getUserById(req.params.userId);
+    if (!user) {
+      throw new ApiError(status.NOT_FOUND, 'User not found')
     }
-  }
 
-  static async updateUser(req, res) {
-    const { id } = req.params;
-    const { name, email, password } = req.body;
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get User by ID Success",
+      data: user
+    });
+  });
 
-    try {
-      const user = await UserService.update(id, { name, email, password });
+  static updateUser = catchAsync(async (req, res) => {
+    const user = await UserService.updateUserById(req.params.userId, req.body);
 
-      res.json({
-        message: 'User Updated Successfully',
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to updated user!!',
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Update User Success",
+      data: user
+    });
+  });
 
-  static async hardDeleteUser(req, res) {
-    const { id } = req.params;
+  static hardDeleteUser = catchAsync(async (req, res) => {
+    await UserService.hardDeleteUserById(req.params.userId);
 
-    try {
-      const user = await UserService.hardDelete(id);
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Hard Delete User Success",
+      data: null
+    });
+  });
 
-      res.json({
-        message: `User Hard Deleted ${id} Successfully`,
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to hard deleted user!!',
-      });
-    }
-  }
+  static softDeleteUser = catchAsync(async (req, res) => {
+    await UserService.softDeleteUserById(req.params.userId);
 
-  static async softDeleteUser(req, res) {
-    const { id } = req.params;
-
-    try {
-      const user = await UserService.softDelete(id);
-
-      res.json({
-        message: `User Soft Deleted ${id} Successfully`,
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to soft delete user!!',
-      });
-    }
-  }
-
-  static async getAllUser(req, res) {
-    try {
-      const user = await UserService.getAll();
-
-      res.json({
-        message: 'Get All Users Successfully',
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to get all user!!',
-      });
-    }
-  }
-
-  static async findUserByID(req, res) {
-    const { id } = req.params;
-
-    try {
-      const user = await UserService.findByID(id);
-
-      res.json({
-        message: `Get Detail ${id} User Successfully`,
-        user,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail ${id} user`,
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Soft Delete User Success",
+      data: null
+    });
+  })
 }
 
 export default UserController;

@@ -1,58 +1,54 @@
 import { prisma } from '../../lib/prisma.js';
+import ApiError from '../utils/ApiError.js';
+import {status} from 'http-status';
 
 class OrderService {
-  static async create(data) {
-    return await prisma.order.create({ data });
+  /**
+   * Create a order
+   * @param {Object} orderBody 
+   * @returns  {Promise<Order>}
+   */
+  static async createOrder(orderBody) {
+    return prisma.order.create({ 
+      data: orderBody
+     });
   }
 
-  static async update(id, data) {
-    return await prisma.order.update({
+  /**
+   * Query for orders
+   * @returns {Promise<orders>}
+   */
+  static async queryOrders() {
+    const orders =  await prisma.order.findMany({
       where: {
-        id: id,
-      },
-      data,
-    });
-  }
-
-  static async hardDelete(id) {
-    return await prisma.order.delete({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  static async softDelete(id) {
-    return await prisma.order.update({
-      where: {
-        id: id,
-      },
-      data: {
-        isActive: false,
-        deletedAt: new Date(),
+        isActive: true,
       },
     });
+
+    return orders;
   }
 
-  static async getAll() {
-    return await prisma.order.findMany({
+  /**
+   * Get category by ID
+   * @param {ObjectId} orderId 
+   * @returns {Promise<Order>}
+   */
+  static async getOrderByID(orderId) {
+    return prisma.order.findFirst({
       where: {
+        id: orderId,
         isActive: true,
       },
     });
   }
 
-  static async findByID(id) {
-    return await prisma.order.findFirst({
-      where: {
-        id: id,
-        isActive: true,
-      },
-    });
-  }
-
-  static async findByUser(userId) {
-    return await prisma.order.findMany({
+  /**
+   * Get order by User ID
+   * @param {ObjectId} userId 
+   * @returns {Promise<Order>}
+   */
+  static async getOrderByUser(userId) {
+    return prisma.order.findMany({
       where: {
         userId: userId,
         isActive: true,
@@ -67,6 +63,72 @@ class OrderService {
         },
       },
     });
+  }
+
+  /**
+   * 
+   * @param {ObjectId} orderId 
+   * @param {Object} orderBody 
+   * @returns {Promise<updateOrder>}
+   */
+  static async updateOrderById(orderId, orderBody) {
+    const order = await this.getOrderByID(orderId);
+    if (!order) {
+      throw new ApiError(status.NOT_FOUND, 'Order not found')
+    }
+
+    const updateOrder = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: orderBody,
+    });
+
+    return updateOrder;
+  }
+
+  /**
+   * Hard delete order by ID
+   * @param {ObjectId} orderId 
+   * @returns {Promise<hardDeleteOrder>}
+   */
+  static async hardDeleteOrderById(orderId) {
+    const order = await this.getOrderByID(orderId);
+    if (!order) {
+      throw new ApiError(status.NOT_FOUND, 'Order not found')
+    }
+
+    const hardDeleteOrder =  await prisma.order.delete({
+      where: {
+        id: orderId,
+      },
+    });
+
+    return hardDeleteOrder;
+  }
+
+  /**
+   * Soft delete order by ID
+   * @param {ObjectId} orderId 
+   * @returns {Promise<softDeleteOrder>}
+   */
+  static async softDeleteOrderById(orderId) {
+    const order = await this.getOrderByID(orderId);
+    if (!order) {
+      throw new ApiError(status.NOT_FOUND, 'Order not found')
+    }
+
+    const softDeleteOrder = await prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      },
+    });
+
+    return softDeleteOrder;
   }
 }
 

@@ -1,155 +1,84 @@
 import ProductService from '../services/product.service.js';
-import logger from '../config/logger.js';
+import ApiError from '../utils/ApiError.js';
+import catchAsync from '../utils/catchAsyncs.js';
+import {status} from 'http-status'
 
 class ProductController {
-  static async createProduct(req, res) {
-    const { name, description, price, quantityInStock, categoryId, userId } = req.body;
-    const parsedPrice = Number(price);
-    const parsedQuantityInStock = Number(quantityInStock);
+  static createProduct = catchAsync(async (req, res) => {
+    const product = await ProductService.createProduct(req.body);
 
-    if (isNaN(parsedPrice) || isNaN(parsedQuantityInStock)) {
-      return res.status(400).json({
-        message: 'Price dan Quantity Stock Harus Berupa Angka!!',
-      });
+    res.status(status.CREATED).send({
+      status: status.CREATED,
+      message: "Create Product Success",
+      data: product
+    })
+  });
+
+  static getProducts = catchAsync(async (req, res) => {
+    const products = await ProductService.queryProducts();
+
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Products Success",
+      data: products
+    })
+  });
+
+  static getProductByID = catchAsync(async (req, res) => {
+    const product = await ProductService.getProductByID(req.params.productId);
+    if (!product) {
+      throw new ApiError(status.NOT_FOUND, 'Product not found')
     }
 
-    try {
-      const product = await ProductService.create({
-        name,
-        description,
-        price: parsedPrice,
-        quantityInStock: parsedQuantityInStock,
-        categoryId,
-        userId,
-      });
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Product by ID Success",
+      data: product
+    })
+  });
 
-      res.status(201).json({
-        message: 'Product created successfully',
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to create product!!',
-      });
+  static getProductByUser = catchAsync(async (req, res) => {
+    const product = await ProductService.getProductByUser(req.params.userId);
+    if(!product) {
+      throw new ApiError(status.NOT_FOUND, 'Category not found')
     }
-  }
 
-  static async updateProduct(req, res) {
-    const { id } = req.params;
-    const { name, description, price, quantityInStock, categoryId, userId } = req.body;
-    const parsedPrice = Number(price);
-    const parsedQuantityInStock = Number(quantityInStock);
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Product by User Success",
+      data: product
+    })
+  });
 
-    try {
-      const product = await ProductService.update(id, {
-        name,
-        description,
-        price: parsedPrice,
-        quantityInStock: parsedQuantityInStock,
-        categoryId,
-        userId,
-      });
+  static updateProduct = catchAsync(async (req, res) => {
+    const product = await ProductService.updateProduct(req.params.productId, req.body);
 
-      res.json({
-        message: 'Product updated successfully',
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to update product!!',
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Update Product Success",
+      data: product
+    });
+  });
 
-  static async hardDeleteProduct(req, res) {
-    const { id } = req.params;
+  static hardDeleteProduct = catchAsync(async (req, res) => {
+    await ProductService.hardDeleteProductById(req.params.productId);
 
-    try {
-      const product = await ProductService.hardDelete(id);
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Hard Delete Product Success",
+      data: null
+    })
+  });
 
-      res.json({
-        message: `Delete ${id} Product Successfully`,
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to delete ${id} product!!`,
-      });
-    }
-  }
+  static softDeleteProduct = catchAsync(async (req, res) => {
+    await ProductService.softDeleteProduct(req.params.productId);
 
-  static async softDelete(req, res) {
-    const { id } = req.params;
-
-    try {
-      const product = await ProductService.softDelete(id);
-
-      res.json({
-        message: `Soft Delete ${id} Product Successfully`,
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to soft delete ${id} product!!`,
-      });
-    }
-  }
-
-  static async getAllProduct(req, res) {
-    try {
-      const product = await ProductService.getAll();
-
-      res.json({
-        message: 'Get all products successfully',
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to get all products!!',
-      });
-    }
-  }
-
-  static async findProductByID(req, res) {
-    const { id } = req.params;
-
-    try {
-      const product = await ProductService.findByID(id);
-
-      res.json({
-        message: `Get Detail ${id} Product Successfully`,
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail ${id} product!!`,
-      });
-    }
-  }
-
-  static async findProductByUser(req, res) {
-    const { userId } = req.params;
-
-    try {
-      const product = await ProductService.findByUser(userId);
-
-      res.json({
-        message: `Get Detail User ${userId} Product Successfully`,
-        product,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail user ${userId} product!!`,
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Soft Delete Product Success",
+      data: null
+    })
+  });
 }
 
 export default ProductController;

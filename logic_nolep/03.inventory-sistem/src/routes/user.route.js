@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import UserController from '../controllers/user.controller.js';
+import auth from '../middlewares/auth.js';
 
 const router = Router();
 
@@ -7,7 +8,7 @@ router.route('/users').post(UserController.createUser).get(UserController.getAll
 
 router.put('/users/:id', UserController.updateUser);
 router.delete('/users/:id', UserController.hardDeleteUser);
-router.get('/users/:id', UserController.findUserByID);
+router.get('/users/:id', auth(), UserController.findUserByID);
 router.patch('/users/:id', UserController.softDeleteUser);
 
 export default router;

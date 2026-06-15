@@ -11,4 +11,9 @@ export default {
   database: {
     url: process.env.DATABASE_URL,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    accessExpirationMinutes: Number(process.env.JWT_ACCESS_EXPIRATION_MINUTES),
+    refreshExpirationDays: Number(process.env.JWT_REFRESH_EXPIRATION_DAYS),
+  },
 };

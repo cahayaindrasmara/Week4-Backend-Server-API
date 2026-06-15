@@ -1,145 +1,74 @@
 import OrderItemService from '../services/orderItem.service.js';
-import logger from '../config/logger.js';
+import ApiError from '../utils/ApiError.js';
+import catchAsync from '../utils/catchAsyncs.js';
+import status from 'http-status';
 
 class OrderItemController {
-  static async createOrderItem(req, res) {
-    const { orderId, productId, quantity, unitPrice } = req.body;
-    const parsedQuantity = Number(quantity);
-    const parsedUnitprice = Number(unitPrice);
+  static createOrderItem = catchAsync(async (req, res) => {
+    const orderItem = await OrderItemService.createOrderItem(req.body);
 
-    try {
-      const orderItem = await OrderItemService.create({
-        orderId,
-        productId,
-        quantity: parsedQuantity,
-        unitPrice: parsedUnitprice,
-      });
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Create Order Item Success",
+      data: orderItem
+    })
+  })
 
-      res.status(201).json({
-        message: 'Order Item Created Successfully',
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to create order!!',
-      });
+  static getOrderItems = catchAsync(async (req, res) => {
+    const orderItems = await OrderItemService.queryOrderItems();
+
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Order Items Success",
+      data: orderItems
+    })
+  });
+
+  static getOrderItemByID = catchAsync(async (req, res) => {
+    const orderItem = await OrderItemService.getOrderItemByID(req.params.orderItemId);
+    if (!orderItem) {
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
     }
-  }
 
-  static async updateOrderItem(req, res) {
-    const { id } = req.params;
-    const { orderId, productId, quantity, unitPrice } = req.body;
-    const parsedQuantity = Number(quantity);
-    const parsedUnitprice = Number(unitPrice);
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Order Item By ID Success",
+      data: orderItem
+    })
+  });
 
-    try {
-      const orderItem = await OrderItemService.update(id, {
-        orderId,
-        productId,
-        quantity: parsedQuantity,
-        unitPrice: parsedUnitprice,
-      });
-
-      res.json({
-        message: 'Order Item Updated Successfully',
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to update order item!!',
-      });
+  static getOrderItemByOrder = catchAsync(async (req, res) => {
+    const orderItem = await OrderItemService.getOrderItemByOrder(req.params.orderId);
+    if (!orderItem) {
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
     }
-  }
 
-  static async hardDeleteOrderItem(req, res) {
-    const { id } = req.params;
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Order Item By Order Success",
+      data: orderItem
+    })
+  });
 
-    try {
-      const orderItem = await OrderItemService.hardDelete(id);
+  static updateOrderItem = catchAsync(async (req, res) => {
+    const orderItem = await OrderItemService.updateOrderItem(req.params.orderItemId, req.body);
 
-      res.json({
-        message: `Delete Order Item ${id} Successfully`,
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to detele ${id} order item!!`,
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Update Order Item Success",
+      data: orderItem
+    })
+  });
 
-  static async softDeleteOrderItem(req, res) {
-    const { id } = req.params;
+  static hardDeleteOrderItem = catchAsync(async (req, res) => {
+    await OrderItemService.hardDeleteOrderItemByID(req.params.orderItemId);
 
-    try {
-      const orderItem = await OrderItemService.softDelete(id);
-
-      res.json({
-        message: `Soft Delete ${id} Order Item Successfully`,
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to soft delete ${id} order item!!`,
-      });
-    }
-  }
-
-  static async getAllOrderItems(req, res) {
-    try {
-      const orderItem = await OrderItemService.getAll();
-
-      res.json({
-        message: 'Get All Data Order Items Successfully',
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to get all data order items!!',
-      });
-    }
-  }
-
-  static async findOrderItemByID(req, res) {
-    const { id } = req.params;
-
-    try {
-      const orderItem = await OrderItemService.findByID(id);
-
-      res.json({
-        message: `Get Detail ${id} Order Item Successfully`,
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail ${id} order item!!`,
-      });
-    }
-  }
-
-  static async findOrderItemByOrder(req, res) {
-    const { orderId } = req.params;
-
-    try {
-      const orderItem = await OrderItemService.findByOrder(orderId);
-
-      res.json({
-        message: `Get Detail Order ${orderId} Order Item Successfully`,
-        orderItem,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail order ${orderId} order item!!`,
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Hard Delete Order Item Success",
+      data: null
+    });
+  });
 }
 
 export default OrderItemController;

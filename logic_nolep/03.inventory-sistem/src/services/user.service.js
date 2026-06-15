@@ -1,52 +1,120 @@
 import { prisma } from '../../lib/prisma.js';
+import status from 'http-status';
+import ApiError from '../utils/ApiError.js';
+import bcrypt from 'bcryptjs';
 
 class UserService {
-  static async create(data) {
-    return await prisma.user.create({ data });
-  }
-
-  static async update(id, data) {
-    return await prisma.user.update({
-      where: {
-        id: id,
-      },
-      data,
+  /**
+   * Create a user
+   * @param {Object} userBody
+   * @returns {Promise<User>}
+   */
+  static async createUser(userBody) {
+    userBody.password = await bcrypt.hash(userBody.password, 10);
+    return prisma.user.create({
+      data: userBody,
     });
   }
 
-  static async hardDelete(id) {
-    return await prisma.user.delete({
+  /**
+   * Get user by email
+   * @param {string} email
+   * @returns {Promise<User>}
+   */
+  static async getUserByEmail(email) {
+    return prisma.user.findUnique({
       where: {
-        id: id,
+        email,
       },
     });
   }
 
-  static async softDelete(id) {
-    return await prisma.user.update({
+  /**
+   * Query for users
+   * @returns {Promise<Users>}
+   */
+  static async queryUsers() {
+    return prisma.user.findMany({
       where: {
-        id: id,
+        isActive: true,
+      },
+    });
+  }
+
+  /**
+   * Get user by ID
+   * @param {ObjectId} userId 
+   * @returns {Promise<User>}
+   */
+  static async getUserById(userId) {
+    return prisma.user.findFirst({
+      where: {
+        id: userId,
+        isActive: true,
+      },
+    });
+  }
+
+  /**
+   * Update user by ID
+   * @param {ObjectId} userId 
+   * @param {Object} userBody 
+   * @returns {Promise<updateUser>}
+   */
+  static async updateUserById(userId, userBody) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new ApiError(status.NOT_FOUND, 'User not found')
+    }
+
+    userBody.password = await bcrypt.hash(userBody.password, 10);
+    
+    const updateUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: userBody,
+    });
+
+    return updateUser;
+  }
+
+  /**
+   * Hard delete user by ID
+   * @param {ObjectId} userId 
+   * @returns {Promise<User>}
+   */
+  static async hardDeleteUserById(userId) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new ApiError(status.NOT_FOUND, 'User not found')
+    }
+    
+    return prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+  }
+
+  /**
+   * Soft delelte user by ID
+   * @param {ObjectId} userId 
+   * @returns {Promise<User>}
+   */
+  static async softDeleteUserById(userId) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new ApiError(status.NOT_FOUND, 'User not found')
+    }
+
+    return prisma.user.update({
+      where: {
+        id: userId,
       },
       data: {
         isActive: false,
         deletedAt: new Date(),
-      },
-    });
-  }
-
-  static async getAll() {
-    return await prisma.user.findMany({
-      where: {
-        isActive: true,
-      },
-    });
-  }
-
-  static async findByID(id) {
-    return await prisma.user.findFirst({
-      where: {
-        id: id,
-        isActive: true,
       },
     });
   }

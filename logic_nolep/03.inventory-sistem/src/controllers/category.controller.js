@@ -1,113 +1,71 @@
 import CategoryService from '../services/category.service.js';
-import logger from '../config/logger.js';
+import ApiError from '../utils/ApiError.js';
+import catchAsync from '../utils/catchAsyncs.js';
+import {status} from 'http-status';
 
 class CategoryController {
-  static async createCategory(req, res) {
-    const { name } = req.body;
+  static createCategory = catchAsync(async (req, res) => {
+    const category = await CategoryService.createCategory(req.body)
 
-    try {
-      const category = await CategoryService.create({ name });
+    res.status(status.CREATED).send({
+      status: status.CREATED,
+      message: "Create Category Success",
+      data: category
+    });
+  });
 
-      res.status(201).json({
-        message: 'Category Create Successfully',
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to create category!!',
-      });
+  static getCategorys = catchAsync(async (req, res) => {
+    const categorys = await CategoryService.queryCategorys();
+
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Categorys Success",
+      data: categorys
+    });
+  });
+
+  static getCategory = catchAsync(async (req, res) => {
+    const category = await CategoryService.getCategoryById(req.params.categoryId);
+    if(!category) {
+      throw new ApiError(status.NOT_FOUND, 'Category not found')
     }
-  }
 
-  static async updateCategory(req, res) {
-    const { id } = req.params;
-    const { name } = req.body;
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Get Category Success",
+      data: category
+    });
+  });
 
-    try {
-      const category = await CategoryService.update(id, { name });
+  static updateCategory = catchAsync(async (req, res) => {
+    const category = await CategoryService.updateCategoryById(req.params.categoryId, req.body);
 
-      res.json({
-        message: 'Category updated successfully',
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to update category!!',
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Update Category Success",
+      data: category
+    });
+  });
 
-  static async hardDeleteCategory(req, res) {
-    const { id } = req.params;
+  static hardDeleteCategory = catchAsync(async (req, res) => {
+    await CategoryService.hardDeleteCategoryById(req.params.categoryId);
 
-    try {
-      const category = await CategoryService.hardDelete(id);
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Hard Delete Category Success",
+      data: null
+    });
+  });
 
-      res.json({
-        message: `Delete ${id} Category Successfully`,
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to delete ${id} category!!`,
-      });
-    }
-  }
+  static softDeleteCategory = catchAsync(async (req, res) => {
+    await CategoryService.softDeleteCategoryById(req.params.categoryId);
 
-  static async softDeleteCategory(req, res) {
-    const { id } = req.params;
-
-    try {
-      const category = await CategoryService.softDelete(id);
-
-      res.json({
-        message: `Soft Delete {id} Category Successfully`,
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to soft delete ${id} category!!`,
-      });
-    }
-  }
-
-  static async getAllCategories(req, res) {
-    try {
-      const category = await CategoryService.getAll();
-
-      res.json({
-        message: 'Get All Data Categories Successfully',
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: 'Failed to get all data categories!!',
-      });
-    }
-  }
-
-  static async findCategoryByID(req, res) {
-    const { id } = req.params;
-
-    try {
-      const category = await CategoryService.findByID(id);
-
-      res.json({
-        message: `Get Detail ${id} Category Successfully`,
-        category,
-      });
-    } catch (error) {
-      logger.error(error);
-      res.status(500).json({
-        message: `Failed to get detail ${id} category!!`,
-      });
-    }
-  }
+    res.status(status.OK).send({
+      status: status.OK,
+      message: "Soft Delete Category Success",
+      data: null
+    });
+  });
 }
 
 export default CategoryController;

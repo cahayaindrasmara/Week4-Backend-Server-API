@@ -1,57 +1,53 @@
 import { prisma } from '../../lib/prisma.js';
+import {status} from 'http-status';
+import ApiError from '../utils/ApiError.js';
 
 class ProductService {
-  static async create(data) {
-    return await prisma.product.create({ data });
+  /**
+   * Create a product
+   * @param {Object} productBody 
+   * @returns {Promise<Product>}
+   */
+  static async createProduct(productBody) {
+    return await prisma.product.create({ 
+      data: productBody
+     });
   }
 
-  static async update(id, data) {
-    return await prisma.product.update({
-      where: {
-        id: id,
-      },
-      data,
-    });
-  }
-
-  static async hardDelete(id) {
-    return await prisma.product.delete({
-      where: {
-        id: id,
-      },
-    });
-  }
-
-  static async softDelete(id) {
-    return await prisma.product.update({
-      where: {
-        id: id,
-      },
-      data: {
-        isActive: false,
-        deletedAt: new Date(),
-      },
-    });
-  }
-
-  static async getAll() {
-    return await prisma.product.findMany({
+  /**
+   * Query for products
+   * @returns {Promise<QueryResult>}
+   */
+  static async queryProducts() {
+    const products =  await prisma.product.findMany({
       where: {
         isActive: true,
       },
     });
+
+    return products;
   }
 
-  static async findByID(id) {
+  /**
+   * Get product by ID
+   * @param {ObjectId} id 
+   * @returns {Promise<Category>}
+   */
+  static async getProductByID(productId) {
     return await prisma.product.findFirst({
       where: {
-        id: id,
+        id: productId,
         isActive: true,
       },
     });
   }
 
-  static async findByUser(userId) {
+  /**
+   * Get product by User ID
+   * @param {ObjectId} userId 
+   * @returns {Promise<Product>}
+   */
+  static async getProductByUser(userId) {
     return await prisma.product.findMany({
       where: {
         userId: userId,
@@ -65,6 +61,68 @@ class ProductService {
             role: true,
           },
         },
+      },
+    });
+  }
+
+  /**
+   * Update product by ID
+   * @param {ObjectId} productId 
+   * @param {Object} updateBody 
+   * @returns {Promise<updateCategory>}
+   */
+  static async updateProduct(productId, updateBody) {
+    const product = await this.getProductByID(productId);
+    if (!product) {
+      throw new ApiError(status.NOT_FOUND, 'Product not found')
+    }
+
+    const updateProduct = await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: updateBody,
+    });
+
+    return updateProduct;
+  }
+
+  /**
+   * Hard delete product by ID
+   * @param {ObjectId} productId 
+   * @returns {Promise<hardDeleteProduct>}
+   */
+  static async hardDeleteProductById(productId) {
+    const product = await this.getProductByID(productId);
+    if (!product) {
+      throw new ApiError(status.NOT_FOUND, 'Product not found')
+    }
+
+    return await prisma.product.delete({
+      where: {
+        id: productId,
+      },
+    });
+  }
+
+  /**
+   * Soft delete product by ID
+   * @param {ObjectId} productId 
+   * @returns {Promise<softDeleteProduct>}
+   */
+  static async softDeleteProduct(productId) {
+    const product = await this.getProductByID(productId);
+    if (!product) {
+      throw new ApiError(status.NOT_FOUND, 'Product not found')
+    }
+
+    return await prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
       },
     });
   }
