@@ -64,7 +64,7 @@ class TokenService {
     });
 
     if (!tokenDoc) {
-      throw new ApiError(400,'Token not found');
+      throw new ApiError(400, 'Token not found');
     }
 
     return tokenDoc;

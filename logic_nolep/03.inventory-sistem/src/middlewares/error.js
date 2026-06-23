@@ -17,7 +17,7 @@ const errorConverter = (err, req, res, next) => {
     } else if (error.code && error.code.startsWith('P')) {
       //handle initialization errors (e.g., connection issues)
       // error = new ApiError(500, 'Prisma Initialization Error: Database Connection Issues');
-      error = handlePrismaClientError(error)
+      error = handlePrismaClientError(error);
     } else {
       //handling global error
       const statusCode = error.statusCode || status.INTERNAL_SERVER_ERROR;
@@ -38,7 +38,7 @@ const errorConverter = (err, req, res, next) => {
 //     if (error.response) {
 //       statusCode = error.response.status;
 //       message = error.response.data?.message || error.response.data;
-//     } 
+//     }
 //     else if (error instanceof Prisma.PrismaClientKnownRequestError) {
 //       statusCode = status.BAD_REQUEST;
 //       message = error.message;
@@ -49,7 +49,6 @@ const errorConverter = (err, req, res, next) => {
 
 //   next(error);
 // };
-
 
 const handlePrismaClientError = (err) => {
   switch (err.code) {

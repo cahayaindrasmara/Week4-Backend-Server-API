@@ -9,45 +9,45 @@ class OrderItemController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Create Order Item Success",
-      data: orderItem
-    })
-  })
+      message: 'Create Order Item Success',
+      data: orderItem,
+    });
+  });
 
   static getOrderItems = catchAsync(async (req, res) => {
     const orderItems = await OrderItemService.queryOrderItems();
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Get Order Items Success",
-      data: orderItems
-    })
+      message: 'Get Order Items Success',
+      data: orderItems,
+    });
   });
 
   static getOrderItemByID = catchAsync(async (req, res) => {
     const orderItem = await OrderItemService.getOrderItemByID(req.params.orderItemId);
     if (!orderItem) {
-      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found');
     }
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Get Order Item By ID Success",
-      data: orderItem
-    })
+      message: 'Get Order Item By ID Success',
+      data: orderItem,
+    });
   });
 
   static getOrderItemByOrder = catchAsync(async (req, res) => {
     const orderItem = await OrderItemService.getOrderItemByOrder(req.params.orderId);
     if (!orderItem) {
-      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found');
     }
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Get Order Item By Order Success",
-      data: orderItem
-    })
+      message: 'Get Order Item By Order Success',
+      data: orderItem,
+    });
   });
 
   static updateOrderItem = catchAsync(async (req, res) => {
@@ -55,9 +55,9 @@ class OrderItemController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Update Order Item Success",
-      data: orderItem
-    })
+      message: 'Update Order Item Success',
+      data: orderItem,
+    });
   });
 
   static hardDeleteOrderItem = catchAsync(async (req, res) => {
@@ -65,8 +65,8 @@ class OrderItemController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Hard Delete Order Item Success",
-      data: null
+      message: 'Hard Delete Order Item Success',
+      data: null,
     });
   });
 }

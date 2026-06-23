@@ -12,7 +12,7 @@ const jwtOptions = {
 const jwtVerify = async (payload, done) => {
   try {
     if (payload.type !== tokenTypes.ACCESS) {
-      throw new ApiError(400,'Invalid token type');
+      throw new ApiError(400, 'Invalid token type');
     }
 
     const user = await prisma.user.findFirst({
@@ -24,7 +24,7 @@ const jwtVerify = async (payload, done) => {
     if (!user) {
       return done(null, false);
     }
-    done(null, user)
+    done(null, user);
   } catch (error) {
     done(error, false);
   }

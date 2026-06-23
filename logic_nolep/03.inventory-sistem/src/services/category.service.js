@@ -1,5 +1,5 @@
 import { prisma } from '../../lib/prisma.js';
-import {status} from 'http-status';
+import { status } from 'http-status';
 import ApiError from '../utils/ApiError.js';
 
 class CategoryService {
@@ -9,9 +9,9 @@ class CategoryService {
    * @returns {Promise<Category>}
    */
   static async createCategory(categoryBody) {
-    return prisma.category.create({ 
-      data: categoryBody
-     });
+    return prisma.category.create({
+      data: categoryBody,
+    });
   }
 
   /**
@@ -21,8 +21,8 @@ class CategoryService {
   static async queryCategorys() {
     const categorys = await prisma.category.findMany({
       where: {
-        isActive: true
-      }
+        isActive: true,
+      },
     });
 
     return categorys;
@@ -51,7 +51,7 @@ class CategoryService {
   static async updateCategoryById(categoryId, updateBody) {
     const category = await this.getCategoryById(categoryId);
     if (!category) {
-      throw new ApiError(status.NOT_FOUND, 'Category not found')
+      throw new ApiError(status.NOT_FOUND, 'Category not found');
     }
 
     const updateCategory = await prisma.category.update({
@@ -72,10 +72,10 @@ class CategoryService {
   static async hardDeleteCategoryById(categoryId) {
     const category = await this.getCategoryById(categoryId);
     if (!category) {
-      throw new ApiError(status.NOT_FOUND, 'Category not found')
+      throw new ApiError(status.NOT_FOUND, 'Category not found');
     }
 
-    const hardDeleteCategory =  await prisma.category.delete({
+    const hardDeleteCategory = await prisma.category.delete({
       where: {
         id: categoryId,
       },
@@ -92,10 +92,10 @@ class CategoryService {
   static async softDeleteCategoryById(categoryId) {
     const category = await this.getCategoryById(categoryId);
     if (!category) {
-      throw new ApiError(status.NOT_FOUND, 'Category not found')
+      throw new ApiError(status.NOT_FOUND, 'Category not found');
     }
 
-    const softDeleteCategory =  await prisma.category.update({
+    const softDeleteCategory = await prisma.category.update({
       where: {
         id: categoryId,
       },
@@ -105,7 +105,7 @@ class CategoryService {
       },
     });
 
-  return softDeleteCategory;
+    return softDeleteCategory;
   }
 }
 

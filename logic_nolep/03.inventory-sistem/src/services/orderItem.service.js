@@ -5,13 +5,13 @@ import ApiError from '../utils/ApiError.js';
 class OrderItemService {
   /**
    * Create a order item
-   * @param {Object} orderItemBody 
+   * @param {Object} orderItemBody
    * @returns {Promise<OrderItem>}
    */
   static async createOrderItem(orderItemBody) {
-    return prisma.orderItem.create({ 
-      data: orderItemBody
-     });
+    return prisma.orderItem.create({
+      data: orderItemBody,
+    });
   }
 
   /**
@@ -24,7 +24,7 @@ class OrderItemService {
 
   /**
    * Get order items by ID
-   * @param {ObjectId} orderItemsId 
+   * @param {ObjectId} orderItemsId
    * @returns {Promise<orderItems>}
    */
   static async getOrderItemByID(orderItemId) {
@@ -37,7 +37,7 @@ class OrderItemService {
 
   /**
    * Get order items by Order
-   * @param {ObjectId} orderId 
+   * @param {ObjectId} orderId
    * @returns {Promise<orderItems>}
    */
   static async getOrderItemByOrder(orderId) {
@@ -58,14 +58,14 @@ class OrderItemService {
 
   /**
    * Update order item by ID
-   * @param {ObjectId} orderItemId 
-   * @param {Object} orderItemBody 
+   * @param {ObjectId} orderItemId
+   * @param {Object} orderItemBody
    * @returns {Promise<updateOrderItem>}
    */
   static async updateOrderItem(orderItemId, orderItemBody) {
     const orderItem = await this.getOrderItemByID(orderItemId);
     if (!orderItem) {
-      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found');
     }
 
     const updateOrderItem = await prisma.orderItem.update({
@@ -80,7 +80,7 @@ class OrderItemService {
 
   /**
    * Hard delete order item by ID
-   * @param {ObjectId} orderItemId 
+   * @param {ObjectId} orderItemId
    * @returns {Promise<hardDeleteOrderItemByID>}
    */
   static async hardDeleteOrderItemByID(orderItemId) {

@@ -1,17 +1,17 @@
 import { prisma } from '../../lib/prisma.js';
-import {status} from 'http-status';
+import { status } from 'http-status';
 import ApiError from '../utils/ApiError.js';
 
 class ProductService {
   /**
    * Create a product
-   * @param {Object} productBody 
+   * @param {Object} productBody
    * @returns {Promise<Product>}
    */
   static async createProduct(productBody) {
-    return await prisma.product.create({ 
-      data: productBody
-     });
+    return await prisma.product.create({
+      data: productBody,
+    });
   }
 
   /**
@@ -19,7 +19,7 @@ class ProductService {
    * @returns {Promise<QueryResult>}
    */
   static async queryProducts() {
-    const products =  await prisma.product.findMany({
+    const products = await prisma.product.findMany({
       where: {
         isActive: true,
       },
@@ -30,7 +30,7 @@ class ProductService {
 
   /**
    * Get product by ID
-   * @param {ObjectId} id 
+   * @param {ObjectId} id
    * @returns {Promise<Category>}
    */
   static async getProductByID(productId) {
@@ -44,7 +44,7 @@ class ProductService {
 
   /**
    * Get product by User ID
-   * @param {ObjectId} userId 
+   * @param {ObjectId} userId
    * @returns {Promise<Product>}
    */
   static async getProductByUser(userId) {
@@ -67,14 +67,14 @@ class ProductService {
 
   /**
    * Update product by ID
-   * @param {ObjectId} productId 
-   * @param {Object} updateBody 
+   * @param {ObjectId} productId
+   * @param {Object} updateBody
    * @returns {Promise<updateCategory>}
    */
   static async updateProduct(productId, updateBody) {
     const product = await this.getProductByID(productId);
     if (!product) {
-      throw new ApiError(status.NOT_FOUND, 'Product not found')
+      throw new ApiError(status.NOT_FOUND, 'Product not found');
     }
 
     const updateProduct = await prisma.product.update({
@@ -89,16 +89,16 @@ class ProductService {
 
   /**
    * Hard delete product by ID
-   * @param {ObjectId} productId 
+   * @param {ObjectId} productId
    * @returns {Promise<hardDeleteProduct>}
    */
   static async hardDeleteProductById(productId) {
     const product = await this.getProductByID(productId);
     if (!product) {
-      throw new ApiError(status.NOT_FOUND, 'Product not found')
+      throw new ApiError(status.NOT_FOUND, 'Product not found');
     }
 
-    return await prisma.product.delete({
+    return prisma.product.delete({
       where: {
         id: productId,
       },
@@ -107,16 +107,16 @@ class ProductService {
 
   /**
    * Soft delete product by ID
-   * @param {ObjectId} productId 
+   * @param {ObjectId} productId
    * @returns {Promise<softDeleteProduct>}
    */
   static async softDeleteProduct(productId) {
     const product = await this.getProductByID(productId);
     if (!product) {
-      throw new ApiError(status.NOT_FOUND, 'Product not found')
+      throw new ApiError(status.NOT_FOUND, 'Product not found');
     }
 
-    return await prisma.product.update({
+    return prisma.product.update({
       where: {
         id: productId,
       },

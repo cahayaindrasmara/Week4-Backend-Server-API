@@ -1,6 +1,6 @@
 import UserService from '../services/user.service.js';
 import catchAsync from '../utils/catchAsyncs.js';
-import {status} from 'http-status';
+import { status } from 'http-status';
 import ApiError from '../utils/ApiError.js';
 
 class UserController {
@@ -9,8 +9,8 @@ class UserController {
 
     res.status(status.CREATED).send({
       status: status.CREATED,
-      message: "Create User Success",
-      data: user
+      message: 'Create User Success',
+      data: user,
     });
   });
 
@@ -19,21 +19,21 @@ class UserController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Get Users Success",
-      data: users
+      message: 'Get Users Success',
+      data: users,
     });
   });
 
   static getUserById = catchAsync(async (req, res) => {
     const user = await UserService.getUserById(req.params.userId);
     if (!user) {
-      throw new ApiError(status.NOT_FOUND, 'User not found')
+      throw new ApiError(status.NOT_FOUND, 'User not found');
     }
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Get User by ID Success",
-      data: user
+      message: 'Get User by ID Success',
+      data: user,
     });
   });
 
@@ -42,8 +42,8 @@ class UserController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Update User Success",
-      data: user
+      message: 'Update User Success',
+      data: user,
     });
   });
 
@@ -52,8 +52,8 @@ class UserController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Hard Delete User Success",
-      data: null
+      message: 'Hard Delete User Success',
+      data: null,
     });
   });
 
@@ -62,10 +62,10 @@ class UserController {
 
     res.status(status.OK).send({
       status: status.OK,
-      message: "Soft Delete User Success",
-      data: null
+      message: 'Soft Delete User Success',
+      data: null,
     });
-  })
+  });
 }
 
 export default UserController;

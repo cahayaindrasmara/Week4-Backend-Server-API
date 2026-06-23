@@ -43,7 +43,7 @@ class UserService {
 
   /**
    * Get user by ID
-   * @param {ObjectId} userId 
+   * @param {ObjectId} userId
    * @returns {Promise<User>}
    */
   static async getUserById(userId) {
@@ -57,18 +57,18 @@ class UserService {
 
   /**
    * Update user by ID
-   * @param {ObjectId} userId 
-   * @param {Object} userBody 
+   * @param {ObjectId} userId
+   * @param {Object} userBody
    * @returns {Promise<updateUser>}
    */
   static async updateUserById(userId, userBody) {
     const user = await this.getUserById(userId);
     if (!user) {
-      throw new ApiError(status.NOT_FOUND, 'User not found')
+      throw new ApiError(status.NOT_FOUND, 'User not found');
     }
 
     userBody.password = await bcrypt.hash(userBody.password, 10);
-    
+
     const updateUser = await prisma.user.update({
       where: {
         id: userId,
@@ -81,15 +81,15 @@ class UserService {
 
   /**
    * Hard delete user by ID
-   * @param {ObjectId} userId 
+   * @param {ObjectId} userId
    * @returns {Promise<User>}
    */
   static async hardDeleteUserById(userId) {
     const user = await this.getUserById(userId);
     if (!user) {
-      throw new ApiError(status.NOT_FOUND, 'User not found')
+      throw new ApiError(status.NOT_FOUND, 'User not found');
     }
-    
+
     return prisma.user.delete({
       where: {
         id: userId,
@@ -99,13 +99,13 @@ class UserService {
 
   /**
    * Soft delelte user by ID
-   * @param {ObjectId} userId 
+   * @param {ObjectId} userId
    * @returns {Promise<User>}
    */
   static async softDeleteUserById(userId) {
     const user = await this.getUserById(userId);
     if (!user) {
-      throw new ApiError(status.NOT_FOUND, 'User not found')
+      throw new ApiError(status.NOT_FOUND, 'User not found');
     }
 
     return prisma.user.update({
