@@ -25,6 +25,12 @@ class ProductValidation {
     }),
   };
 
+  static getProductByCategory = {
+    query: Joi.object().keys({
+      category: Joi.string(),
+    })
+  }
+
   static updateProduct = {
     params: Joi.object().keys({
       productId: Joi.string().custom(objectId),

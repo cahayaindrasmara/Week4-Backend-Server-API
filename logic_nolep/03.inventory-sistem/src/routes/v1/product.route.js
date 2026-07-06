@@ -10,7 +10,7 @@ router
   .route('/')
   .post(auth(), validate(ProductValidation.createProduct), ProductController.createProduct)
   .get(auth(), ProductController.getProducts);
-
+  
 router
   .route('/:productId')
   .get(auth(), validate(ProductValidation.getProductByID), ProductController.getProductByID)

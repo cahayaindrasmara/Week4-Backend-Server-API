@@ -15,7 +15,15 @@ class ProductController {
   });
 
   static getProducts = catchAsync(async (req, res) => {
-    const products = await ProductService.queryProducts();
+    const { category } = req.query;
+
+    let products;
+
+    if (category) {
+      products = await ProductService.getProductByCategory(category);
+    } else {
+      products = await ProductService.queryProducts();
+    }
 
     res.status(status.OK).send({
       status: status.OK,

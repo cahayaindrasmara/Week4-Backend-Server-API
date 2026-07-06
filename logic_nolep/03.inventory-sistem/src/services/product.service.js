@@ -66,6 +66,27 @@ class ProductService {
   }
 
   /**
+   * Get product by Category
+   * @param {String} category
+   * @returns {Promise<categories>}
+   */
+  static async getProductByCategory(category) {
+    return await prisma.product.findMany({
+      where: {
+        isActive: true,
+        category: {
+          name: {
+            contains: category,
+          }
+        }
+      },
+      include: {
+        category: true
+      }
+    });
+  }
+
+  /**
    * Update product by ID
    * @param {ObjectId} productId
    * @param {Object} updateBody
