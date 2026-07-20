@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/prisma.js';
 import ApiError from '../utils/ApiError.js';
 import { status } from 'http-status';
+import getPagination from '../utils/pagination.js';
 
 class OrderService {
   /**
@@ -83,14 +84,33 @@ class OrderService {
    * Query for orders
    * @returns {Promise<Order[]>}
    */
-  static async queryOrders() {
-    const orders = await prisma.order.findMany({
-      where: {
-        isActive: true,
-      },
-    });
+  static async queryOrders(page, size) {
+    const {skip, take, page: currentPage, size:pageSize} = getPagination(page, size);
 
-    return orders;
+    const [orders, totalData] = await Promise.all([
+      prisma.order.findMany({
+        where: {
+          isActive: true,
+        },
+        skip,
+        take,
+      }),
+      prisma.order.count({
+        where: {
+          isActive: true,
+        }
+      })
+    ])
+
+    return {
+      data: orders,
+      pagination: {
+        page: currentPage,
+        size: pageSize,
+        totalData,
+        totalPage: Math.ceil(totalData/pageSize)
+      }
+    }
   }
 
   /**

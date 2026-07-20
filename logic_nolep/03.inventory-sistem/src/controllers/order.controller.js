@@ -16,12 +16,15 @@ class OrderController {
   });
 
   static getOrders = catchAsync(async (req, res) => {
-    const orders = await OrderService.queryOrders();
+    const {page, size} = req.query;
+
+    const orders = await OrderService.queryOrders(page, size);
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Orders Success',
-      data: orders,
+      data: orders.data,
+      pagination: orders.pagination,
     });
   });
 

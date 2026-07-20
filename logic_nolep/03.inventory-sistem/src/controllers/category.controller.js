@@ -15,12 +15,15 @@ class CategoryController {
   });
 
   static getCategorys = catchAsync(async (req, res) => {
-    const categorys = await CategoryService.queryCategorys();
+    const {page, size} = req.query;
+
+    const categorys = await CategoryService.queryCategorys(page, size);
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Categorys Success',
-      data: categorys,
+      data: categorys.data,
+      pagination: categorys.pagination,
     });
   });
 

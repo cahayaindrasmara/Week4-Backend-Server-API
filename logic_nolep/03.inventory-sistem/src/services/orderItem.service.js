@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/prisma.js';
 import status from 'http-status';
 import ApiError from '../utils/ApiError.js';
+import getPagination from '../utils/pagination.js';
 
 class OrderItemService {
   /**
@@ -18,8 +19,26 @@ class OrderItemService {
    * Query for order items
    * @returns {Promise<orderItems>}
    */
-  static async queryOrderItems() {
-    return prisma.orderItem.findMany({});
+  static async queryOrderItems(page, size) {
+    const {skip, take, page: currentPage, size: pageSize} = getPagination(page, size)
+
+    const [orderItems, totalData] = await Promise.all([
+      prisma.orderItem.findMany({
+        skip,
+        take
+      }),
+      prisma.orderItem.count({})
+    ])
+
+    return {
+      data: orderItems,
+      pagination: {
+        page: currentPage,
+        size: pageSize,
+        totalData,
+        totalPage: Math.ceil(totalData/pageSize)
+      }
+    }
   }
 
   /**

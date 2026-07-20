@@ -9,7 +9,7 @@ const router = Router();
 router
   .route('/')
   .post(auth(), validate(ProductValidation.createProduct), ProductController.createProduct)
-  .get(auth(), ProductController.getProducts);
+  .get(auth(), validate(ProductValidation.getProducts), ProductController.getProducts);
   
 router
   .route('/:productId')

@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/prisma.js';
 import { status } from 'http-status';
 import ApiError from '../utils/ApiError.js';
+import getPagination from '../utils/pagination.js';
 
 class ProductService {
   /**
@@ -18,14 +19,33 @@ class ProductService {
    * Query for products
    * @returns {Promise<QueryResult>}
    */
-  static async queryProducts() {
-    const products = await prisma.product.findMany({
-      where: {
-        isActive: true,
-      },
-    });
+  static async queryProducts(page, size) {
+    const { skip, take, page: currentPage, size: pageSize } = getPagination(page, size);
 
-    return products;
+    const [products, totalData] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          isActive: true,
+        },
+        skip,
+        take,
+      }),
+      prisma.product.count({
+        where: {
+          isActive: true,
+        }
+      })
+    ]);
+
+    return {
+      data:products,
+      pagination: {
+        page: currentPage,
+        size: pageSize,
+        totalData,
+        totalPage: Math.ceil(totalData/pageSize)
+      }
+    }
   }
 
   /**
@@ -77,12 +97,12 @@ class ProductService {
         category: {
           name: {
             contains: category,
-          }
-        }
+          },
+        },
       },
       include: {
-        category: true
-      }
+        category: true,
+      },
     });
   }
 

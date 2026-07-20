@@ -13,6 +13,12 @@ class ProductValidation {
     }),
   };
 
+  static getProducts = {
+    query: Joi.object().keys({
+      category: Joi.string(),
+    })
+  }
+
   static getProductByID = {
     params: Joi.object().keys({
       productId: Joi.string().custom(objectId),
@@ -24,12 +30,6 @@ class ProductValidation {
       userId: Joi.string().custom(objectId),
     }),
   };
-
-  static getProductByCategory = {
-    query: Joi.object().keys({
-      category: Joi.string(),
-    })
-  }
 
   static updateProduct = {
     params: Joi.object().keys({

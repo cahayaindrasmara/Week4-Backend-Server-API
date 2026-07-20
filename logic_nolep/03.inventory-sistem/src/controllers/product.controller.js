@@ -15,25 +15,34 @@ class ProductController {
   });
 
   static getProducts = catchAsync(async (req, res) => {
-    const { category } = req.query;
+    const { category, page, size } = req.query;
 
     let products;
 
     if (category) {
       products = await ProductService.getProductByCategory(category);
-    } else {
-      products = await ProductService.queryProducts();
-    }
 
-    res.status(status.OK).send({
-      status: status.OK,
-      message: 'Get Products Success',
-      data: products,
-    });
+      res.status(status.OK).send({
+        status: status.OK,
+        message: `Search Product by ${category} Success`,
+        data: products
+      })
+    } else {
+      products = await ProductService.queryProducts(page, size);
+
+      res.status(status.OK).send({
+        status: status.OK,
+        message: 'Get Products Success',
+        data: products.data,
+        pagination: products.pagination,
+      });
+    }
   });
 
   static getProductByID = catchAsync(async (req, res) => {
-    const product = await ProductService.getProductByID(req.params.productId);
+    const { productId } = req.params;
+
+    const product = await ProductService.getProductByID(productId);
     if (!product) {
       throw new ApiError(status.NOT_FOUND, 'Product not found');
     }
@@ -46,7 +55,9 @@ class ProductController {
   });
 
   static getProductByUser = catchAsync(async (req, res) => {
-    const product = await ProductService.getProductByUser(req.params.userId);
+    const { userId } = req.params;
+
+    const product = await ProductService.getProductByUser(userId);
     if (!product) {
       throw new ApiError(status.NOT_FOUND, 'Category not found');
     }

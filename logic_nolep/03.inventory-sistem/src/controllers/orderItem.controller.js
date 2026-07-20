@@ -15,12 +15,15 @@ class OrderItemController {
   });
 
   static getOrderItems = catchAsync(async (req, res) => {
-    const orderItems = await OrderItemService.queryOrderItems();
+    const {page, size} = req.query;
+
+    const orderItems = await OrderItemService.queryOrderItems(page,size);
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Order Items Success',
-      data: orderItems,
+      data: orderItems.data,
+      pagination: orderItems.pagination,
     });
   });
 

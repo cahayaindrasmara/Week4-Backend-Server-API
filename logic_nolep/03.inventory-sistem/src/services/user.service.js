@@ -2,6 +2,7 @@ import { prisma } from '../../lib/prisma.js';
 import status from 'http-status';
 import ApiError from '../utils/ApiError.js';
 import bcrypt from 'bcryptjs';
+import getPagination from '../utils/pagination.js';
 
 class UserService {
   /**
@@ -33,12 +34,33 @@ class UserService {
    * Query for users
    * @returns {Promise<Users>}
    */
-  static async queryUsers() {
-    return prisma.user.findMany({
-      where: {
-        isActive: true,
-      },
-    });
+  static async queryUsers(page, size) {
+    const {skip, take, page: currentPage, size: pageSize} = getPagination(page, size);
+
+    const [users, totalData] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          isActive: true,
+        },
+        skip,
+        take,
+      }),
+      prisma.user.count({
+        where: {
+          isActive: true,
+        }
+      })
+    ])
+
+    return {
+      data: users,
+      pagination: {
+        page: currentPage,
+        size: pageSize,
+        totalData,
+        totalPage: Math.ceil(totalData/pageSize)
+      }
+    }
   }
 
   /**

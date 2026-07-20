@@ -7,22 +7,23 @@ import ProductValidation from '../../validations/product.validation.js';
 import ProductController from '../../controllers/product.controller.js';
 import OrderValidation from '../../validations/order.validation.js';
 import OrderController from '../../controllers/order.controller.js';
+import authorization from '../../middlewares/authorizarion.js';
 
 const router = Router();
 
 router
   .route('/')
-  .post(auth(), validate(UserValidation.createUser), UserController.createUser)
-  .get(auth(), UserController.getUsers);
+  .post(auth(), authorization('admin'), validate(UserValidation.createUser), UserController.createUser)
+  .get(auth(), authorization('admin'), UserController.getUsers);
 
 router
   .route('/:userId')
-  .get(auth(), validate(UserValidation.getUser), UserController.getUserById)
-  .put(auth(), validate(UserValidation.updateUser), UserController.updateUser)
-  .delete(auth(), validate(UserValidation.hardDeleteUser), UserController.hardDeleteUser)
-  .patch(auth(), validate(UserValidation.softDeleteUser), UserController.softDeleteUser);
+  .get(auth(), authorization('admin'), validate(UserValidation.getUser), UserController.getUserById)
+  .put(auth(), authorization('admin'), validate(UserValidation.updateUser), UserController.updateUser)
+  .delete(auth(), authorization('admin'), validate(UserValidation.hardDeleteUser), UserController.hardDeleteUser)
+  .patch(auth(), authorization('admin'), validate(UserValidation.softDeleteUser), UserController.softDeleteUser);
 
-router.get('/:userId/products', validate(ProductValidation.getProductByUser), ProductController.getProductByUser);
-router.get('/:userId/orders', validate(OrderValidation.getOrderByUser), OrderController.getOrderByUser);
+router.get('/:userId/products', authorization('admin'), validate(ProductValidation.getProductByUser), ProductController.getProductByUser);
+router.get('/:userId/orders', authorization('admin'), validate(OrderValidation.getOrderByUser), OrderController.getOrderByUser);
 
 export default router;

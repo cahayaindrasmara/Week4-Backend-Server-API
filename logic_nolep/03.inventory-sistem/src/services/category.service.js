@@ -1,6 +1,7 @@
 import { prisma } from '../../lib/prisma.js';
 import { status } from 'http-status';
 import ApiError from '../utils/ApiError.js';
+import getPagination from '../utils/pagination.js';
 
 class CategoryService {
   /**
@@ -18,14 +19,33 @@ class CategoryService {
    * Query for categorys
    * @returns {Promise<categorys>}
    */
-  static async queryCategorys() {
-    const categorys = await prisma.category.findMany({
-      where: {
-        isActive: true,
-      },
-    });
+  static async queryCategorys(page, size) {
+    const {skip, take, page: currentPage, size: pageSize} = getPagination(page, size);
 
-    return categorys;
+    const [categorys, totalData] = await Promise.all([
+      prisma.category.findMany({
+        where: {
+          isActive: true,
+        },
+        skip,
+        take,
+      }),
+      prisma.category.count({
+        where: {
+          isActive: true,
+        },
+      }),
+    ]);
+
+    return {
+      data: categorys,
+      pagination: {
+        page: currentPage,
+        size: pageSize,
+        totalData,
+        totalPage: Math.ceil(totalData/pageSize)
+      }
+    }
   }
 
   /**

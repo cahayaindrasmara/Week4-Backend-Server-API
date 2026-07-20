@@ -15,12 +15,15 @@ class UserController {
   });
 
   static getUsers = catchAsync(async (req, res) => {
-    const users = await UserService.queryUsers();
+    const {page, size} = req.query;
+
+    const users = await UserService.queryUsers(page, size);
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Users Success',
-      data: users,
+      data: users.data,
+      pagination: users.pagination,
     });
   });
 
