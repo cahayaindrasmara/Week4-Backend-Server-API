@@ -11,14 +11,32 @@ const register = catchAsync(async (req, res) => {
   }
   const userCreated = await UserService.createUser(req.body);
   const tokens = await TokenService.generateAuthTokens(userCreated);
-  res.status(status.CREATED).send({ userCreated, tokens });
+
+  const userResponse = {
+    id: userCreated.id,
+    name: userCreated.name,
+    email: userCreated.email,
+    role: userCreated.role,
+    isActive: userCreated.isActive
+  }
+
+  res.status(status.CREATED).send({ userResponse, tokens });
 });
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await TokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+
+  const userResponse = {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    isActive: user.isActive
+  }
+
+  res.send({ userResponse, tokens });
 });
 
 export default {
