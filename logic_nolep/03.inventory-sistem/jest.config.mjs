@@ -6,5 +6,5 @@ export default {
     restoreMocks: true,
     coveragePathIgnorePatterns: ['node_modules', 'src/config', 'src/app.js', 'tests', 'generated'],
     coverageReporters: ['text', 'lcov', 'clover', 'html'],
-    setupFilesAfterEnv: ['./mock.js']
+    setupFilesAfterEnv: ['<rootDir>/tests/setupAfterEnv.js']
 };

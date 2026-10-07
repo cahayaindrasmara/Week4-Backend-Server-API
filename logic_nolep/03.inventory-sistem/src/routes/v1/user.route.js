@@ -21,9 +21,10 @@ router
   .get(auth(), authorization('admin'), validate(UserValidation.getUser), UserController.getUserById)
   .put(auth(), authorization('admin'), validate(UserValidation.updateUser), UserController.updateUser)
   .delete(auth(), authorization('admin'), validate(UserValidation.hardDeleteUser), UserController.hardDeleteUser)
-  .patch(auth(), authorization('admin'), validate(UserValidation.softDeleteUser), UserController.softDeleteUser);
+  
+router.patch('/:userId/soft-delete', auth(), authorization('admin'), validate(UserValidation.softDeleteUser), UserController.softDeleteUser);
 
-router.get('/:userId/products', authorization('admin'), validate(ProductValidation.getProductByUser), ProductController.getProductByUser);
-router.get('/:userId/orders', authorization('admin'), validate(OrderValidation.getOrderByUser), OrderController.getOrderByUser);
+router.get('/:userId/products',auth(), authorization('admin'), validate(ProductValidation.getProductByUser), ProductController.getProductByUser);
+router.get('/:userId/orders',auth(), authorization('admin'), validate(OrderValidation.getOrderByUser), OrderController.getOrderByUser);
 
 export default router;

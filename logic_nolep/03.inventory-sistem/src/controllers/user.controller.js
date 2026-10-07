@@ -5,12 +5,27 @@ import ApiError from '../utils/ApiError.js';
 
 class UserController {
   static createUser = catchAsync(async (req, res) => {
+    const existingUser = await UserService.getUserByEmail(req.body.email)
+
+    if (existingUser) {
+      throw new ApiError(status.BAD_REQUEST, 'Email already taken');
+    }
+
     const user = await UserService.createUser(req.body);
+
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      isEmailVerified: user.isEmailVerified
+    }
 
     res.status(status.CREATED).send({
       status: status.CREATED,
       message: 'Create User Success',
-      data: user,
+      data: userResponse,
     });
   });
 
@@ -19,10 +34,19 @@ class UserController {
 
     const users = await UserService.queryUsers(page, size);
 
+    const userResponse = users.data.map(user => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isEmailVerified: user.isEmailVerified,
+        isActive: user.isActive
+    }));
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Users Success',
-      data: users.data,
+      data: userResponse,
       pagination: users.pagination,
     });
   });
@@ -41,12 +65,27 @@ class UserController {
   });
 
   static updateUser = catchAsync(async (req, res) => {
+    const existingUser = await UserService.getUserByEmail(req.body.email)
+
+    if (existingUser) {
+      throw new ApiError(status.BAD_REQUEST, 'Email already taken');
+    }
+
     const user = await UserService.updateUserById(req.params.userId, req.body);
+
+    const userResponse = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+      isEmailVerified: user.isEmailVerified
+    }
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Update User Success',
-      data: user,
+      data: userResponse,
     });
   });
 

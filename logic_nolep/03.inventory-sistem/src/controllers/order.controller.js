@@ -8,10 +8,20 @@ class OrderController {
   static createOrder = catchAsync(async (req, res) => {
     const order = await OrderService.createOrder(req.body);
 
+    const orderResponse = {
+      id: order.id,
+      date: order.date,
+      totalPrice: order.totalPrice,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      userId: order.userId,
+      isActive: order.isActive
+    }
+
     res.status(status.CREATED).send({
       status: status.CREATED,
       message: 'Create Order Success',
-      data: order,
+      data: orderResponse,
     });
   });
 
@@ -20,10 +30,20 @@ class OrderController {
 
     const orders = await OrderService.queryOrders(page, size);
 
+    const orderResponse = orders.data.map(order => ({
+      id: order.id,
+      date: order.date,
+      totalPrice: order.totalPrice,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      userId: order.userId,
+      isActive: order.isActive
+    }));
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Orders Success',
-      data: orders.data,
+      data: orderResponse,
       pagination: orders.pagination,
     });
   });
@@ -59,10 +79,20 @@ class OrderController {
   static updateOrder = catchAsync(async (req, res) => {
     const order = await OrderService.updateOrderById(req.params.orderId, req.body);
 
+    const orderResponse = {
+      id: order.id,
+      date: order.date,
+      totalPrice: order.totalPrice,
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      userId: order.userId,
+      isActive: order.isActive
+    }
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Update Order Success',
-      data: order,
+      data: orderResponse,
     });
   });
 

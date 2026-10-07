@@ -9,13 +9,14 @@ const router = Router();
 router
   .route('/')
   .post(auth(), validate(CategoryValidation.createCategory), CategoryController.createCategory)
-  .get(auth(), CategoryController.getCategorys);
+  .get(auth(), CategoryController.getCategories);
 
 router
   .route('/:categoryId')
   .get(auth(), validate(CategoryValidation.getCategory), CategoryController.getCategory)
-  .put(auth(), validate(CategoryValidation.updataCategory), CategoryController.updateCategory)
+  .put(auth(), validate(CategoryValidation.updateCategory), CategoryController.updateCategory)
   .delete(auth(), validate(CategoryValidation.hardDeleteCategory), CategoryController.hardDeleteCategory)
-  .patch(auth(), validate(CategoryValidation.softDeleteCategory), CategoryController.softDeleteCategory);
+  
+router.patch('/:categoryId/soft-delete', auth(), validate(CategoryValidation.softDeleteCategory), CategoryController.softDeleteCategory);
 
 export default router;

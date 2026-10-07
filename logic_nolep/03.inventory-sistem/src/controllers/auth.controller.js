@@ -9,6 +9,7 @@ const register = catchAsync(async (req, res) => {
   if (existingUser) {
     throw new ApiError(status.BAD_REQUEST, 'Email already taken');
   }
+  
   const userCreated = await UserService.createUser(req.body);
   const tokens = await TokenService.generateAuthTokens(userCreated);
 

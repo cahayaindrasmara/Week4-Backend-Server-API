@@ -19,7 +19,8 @@ router
   .get(auth(), authorization('admin'), validate(OrderValidation.getOrderByID), OrderController.getOrderByID)
   .put(auth(), authorization('admin'), validate(OrderValidation.updateOrder), OrderController.updateOrder)
   .delete(auth(), authorization('admin'), validate(OrderValidation.hardDeleteOrder), OrderController.hardDeleteOrder)
-  .patch(auth(), authorization('admin'), validate(OrderValidation.softDeleteOrder), OrderController.softDeleteOrder);
+  
+router.patch('/:orderId/soft-delete', auth(), authorization('admin'), validate(OrderValidation.softDeleteOrder), OrderController.softDeleteOrder);
 
 router.get(
   '/:orderId/order-items', auth(), authorization('admin'),

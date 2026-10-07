@@ -14,15 +14,14 @@ class CategoryValidation {
     }),
   };
 
-  static updataCategory = {
+  static updateCategory = {
     params: Joi.object().keys({
       categoryId: Joi.string().custom(objectId),
     }),
     body: Joi.object()
       .keys({
         name: Joi.string(),
-      })
-      .min(1),
+      }).min(1),
   };
 
   static hardDeleteCategory = {

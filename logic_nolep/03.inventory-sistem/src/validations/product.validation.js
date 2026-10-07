@@ -36,13 +36,13 @@ class ProductValidation {
       productId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      description: Joi.string().required(),
-      price: Joi.number().required(),
-      quantityInStock: Joi.number().required(),
+      name: Joi.string(),
+      description: Joi.string(),
+      price: Joi.number(),
+      quantityInStock: Joi.number(),
       categoryId: Joi.string().custom(objectId),
       userId: Joi.string().custom(objectId),
-    }),
+    }).min(1),
   };
 
   static hardDeleteProduct = {

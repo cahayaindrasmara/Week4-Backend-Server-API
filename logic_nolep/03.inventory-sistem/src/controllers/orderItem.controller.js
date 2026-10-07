@@ -7,10 +7,18 @@ class OrderItemController {
   static createOrderItem = catchAsync(async (req, res) => {
     const orderItem = await OrderItemService.createOrderItem(req.body);
 
-    res.status(status.OK).send({
-      status: status.OK,
+    const orderItemsResponse = {
+      id: orderItem.id,
+      orderId: orderItem.orderId,
+      productId: orderItem.productId,
+      quantity: orderItem.quantity,
+      unitPrice: orderItem.unitPrice
+    }
+
+    res.status(status.CREATED).send({
+      status: status.CREATED,
       message: 'Create Order Item Success',
-      data: orderItem,
+      data: orderItemsResponse,
     });
   });
 
@@ -19,10 +27,18 @@ class OrderItemController {
 
     const orderItems = await OrderItemService.queryOrderItems(page,size);
 
+    const orderItemsResponse = orderItems.data.map(orderItem => ({
+      id: orderItem.id,
+      orderId: orderItem.orderId,
+      productId: orderItem.productId,
+      quantity: orderItem.quantity,
+      unitPrice: orderItem.unitPrice
+    }));
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Order Items Success',
-      data: orderItems.data,
+      data: orderItemsResponse,
       pagination: orderItems.pagination,
     });
   });
@@ -33,10 +49,18 @@ class OrderItemController {
       throw new ApiError(status.NOT_FOUND, 'Order Item not found');
     }
 
+    const orderItemsResponse = {
+      id: orderItem.id,
+      orderId: orderItem.orderId,
+      productId: orderItem.productId,
+      quantity: orderItem.quantity,
+      unitPrice: orderItem.unitPrice
+    }
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Order Item By ID Success',
-      data: orderItem,
+      data: orderItemsResponse,
     });
   });
 
@@ -56,10 +80,18 @@ class OrderItemController {
   static updateOrderItem = catchAsync(async (req, res) => {
     const orderItem = await OrderItemService.updateOrderItem(req.params.orderItemId, req.body);
 
+    const orderItemsResponse = {
+      id: orderItem.id,
+      orderId: orderItem.orderId,
+      productId: orderItem.productId,
+      quantity: orderItem.quantity,
+      unitPrice: orderItem.unitPrice
+    }
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Update Order Item Success',
-      data: orderItem,
+      data: orderItemsResponse,
     });
   });
 

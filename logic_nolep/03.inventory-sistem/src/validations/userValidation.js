@@ -8,7 +8,7 @@ class UserValidation {
       email: Joi.string().email().required(),
       password: Joi.string().custom(password).required(),
       role: Joi.string(),
-    }),
+    }).min(1),
   };
 
   static getUser = {
@@ -22,11 +22,11 @@ class UserValidation {
       userId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
-      name: Joi.string().required(),
-      email: Joi.string().email().required(),
-      password: Joi.string().custom(password).required(),
+      name: Joi.string(),
+      email: Joi.string().email(),
+      password: Joi.string().custom(password),
       role: Joi.string(),
-    }),
+    }).min(1),
   };
 
   static hardDeleteUser = {

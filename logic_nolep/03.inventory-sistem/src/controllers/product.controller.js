@@ -7,10 +7,21 @@ class ProductController {
   static createProduct = catchAsync(async (req, res) => {
     const product = await ProductService.createProduct(req.body);
 
+    const productResponse = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      quantityInStock: product.quantityInStock,
+      userId: product.userId,
+      categoryId: product.categoryId,
+      isActive: product.isActive,
+    }
+
     res.status(status.CREATED).send({
       status: status.CREATED,
       message: 'Create Product Success',
-      data: product,
+      data: productResponse,
     });
   });
 
@@ -22,18 +33,40 @@ class ProductController {
     if (category) {
       products = await ProductService.getProductByCategory(category);
 
+      const productResponse = products.data.map((product) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        quantityInStock: product.quantityInStock,
+        userId: product.userId,
+        categoryId: product.categoryId,
+        isActive: product.isActive,
+      }));
+
       res.status(status.OK).send({
         status: status.OK,
         message: `Search Product by ${category} Success`,
-        data: products
+        data: productResponse
       })
     } else {
       products = await ProductService.queryProducts(page, size);
 
+      const productResponse = products.data.map((product) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        quantityInStock: product.quantityInStock,
+        userId: product.userId,
+        categoryId: product.categoryId,
+        isActive: product.isActive,
+      }));
+
       res.status(status.OK).send({
         status: status.OK,
         message: 'Get Products Success',
-        data: products.data,
+        data: productResponse,
         pagination: products.pagination,
       });
     }
@@ -47,10 +80,21 @@ class ProductController {
       throw new ApiError(status.NOT_FOUND, 'Product not found');
     }
 
+    const productResponse = {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      quantityInStock: product.quantityInStock,
+      userId: product.userId,
+      categoryId: product.categoryId,
+      isActive: product.isActive,
+    }
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Get Product by ID Success',
-      data: product,
+      data: productResponse,
     });
   });
 
@@ -72,10 +116,21 @@ class ProductController {
   static updateProduct = catchAsync(async (req, res) => {
     const product = await ProductService.updateProduct(req.params.productId, req.body);
 
+    const productResponse = {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        quantityInStock: product.quantityInStock,
+        userId: product.userId,
+        categoryId: product.categoryId,
+        isActive: product.isActive,
+      };
+
     res.status(status.OK).send({
       status: status.OK,
       message: 'Update Product Success',
-      data: product,
+      data: productResponse,
     });
   });
 

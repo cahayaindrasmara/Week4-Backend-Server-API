@@ -36,11 +36,18 @@ class OrderValidation {
       orderId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
-      totalPrice: Joi.number().required(),
-      customerName: Joi.string().required(),
-      customerEmail: Joi.string().required(),
+      customerName: Joi.string(),
+      customerEmail: Joi.string(),
       userId: Joi.string().custom(objectId),
-    }),
+      items: Joi.array()
+        .items(
+          Joi.object({
+            productId: Joi.string().custom(objectId).required(),
+            quantity: Joi.number().required(),
+          }),
+        )
+        .min(1),
+    }).min(1),
   };
 
   static hardDeleteOrder = {

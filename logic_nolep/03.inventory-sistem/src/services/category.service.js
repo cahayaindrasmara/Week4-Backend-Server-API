@@ -63,6 +63,20 @@ class CategoryService {
   }
 
   /**
+   * Get category by ID
+   * @param {ObjectId} id
+   * @returns {Promise<Category>}
+   */
+  static async getCategoryByName(name) {
+    return prisma.category.findFirst({
+      where: {
+        name: name,
+        isActive: true,
+      },
+    });
+  }
+
+  /**
    * Update category by ID
    * @param {ObjectId} categoryId
    * @param {Object} updateBody

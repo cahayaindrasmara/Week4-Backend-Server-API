@@ -21,6 +21,7 @@
     "prepare": "husky install",
     "db:test:migrate": "dotenv -e .env.test -- prisma migrate deploy",
     "test": "dotenv -e .env.test -- cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --noStackTrace",
+    "test:integration": "dotenv -e .env.test -- cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --verbose",
     "test:watch": "jest -i --watchAll",
     "coverage": "dotenv -e .env.test -- cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js -i --coverage --noStackTrace",
     "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls"

@@ -14,12 +14,23 @@ const userOne = {
     password,
     role: 'user',
     isActive: true,
+    isEmailVerified: false
 };
 
 const userTwo = {
     id: randomUUID(),
     name: faker.person.fullName(),
     email: faker.internet.email().toLowerCase(),
+    password,
+    role: 'user',
+    isActive: true,
+    isEmailVerified: false
+}
+
+const userForDelete = {
+    id: randomUUID(),
+    name: 'user delete',
+    email: 'userDelete@gmail.com',
     password,
     role: 'user',
     isActive: true,
@@ -49,6 +60,7 @@ const insertUsers = async(users) => {
 export {
     userOne,
     userTwo,
+    userForDelete,
     admin,
     insertUsers
 }

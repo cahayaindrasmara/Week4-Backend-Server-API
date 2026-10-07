@@ -16,6 +16,7 @@ router
   .get(auth(), validate(ProductValidation.getProductByID), ProductController.getProductByID)
   .put(auth(), validate(ProductValidation.updateProduct), ProductController.updateProduct)
   .delete(auth(), validate(ProductValidation.hardDeleteProduct), ProductController.hardDeleteProduct)
-  .patch(auth(), validate(ProductValidation.softDeleteProduct), ProductController.softDeleteProduct);
+  
+router.patch('/:productId/soft-delete', auth(), validate(ProductValidation.softDeleteProduct), ProductController.softDeleteProduct);
 
 export default router;

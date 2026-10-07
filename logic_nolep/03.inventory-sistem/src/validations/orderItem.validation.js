@@ -28,11 +28,11 @@ class OrderItemValidation {
       orderItemId: Joi.string().custom(objectId),
     }),
     body: Joi.object().keys({
-      orderId: Joi.string().custom(objectId).required(),
-      productId: Joi.string().custom(objectId).required(),
-      quantity: Joi.number().required(),
-      unitPrice: Joi.number().required(),
-    }),
+      orderId: Joi.string().custom(objectId),
+      productId: Joi.string().custom(objectId),
+      quantity: Joi.number(),
+      unitPrice: Joi.number(),
+    }).min(1),
   };
 
   static hardDeleteOrderItem = {

@@ -103,6 +103,12 @@ class OrderItemService {
    * @returns {Promise<hardDeleteOrderItemByID>}
    */
   static async hardDeleteOrderItemByID(orderItemId) {
+    const orderItem = await this.getOrderItemByID(orderItemId);
+
+    if(!orderItem) {
+      throw new ApiError(status.NOT_FOUND, 'Order Item not found')
+    }
+
     return prisma.orderItem.delete({
       where: {
         id: orderItemId,

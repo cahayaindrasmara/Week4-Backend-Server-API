@@ -5,25 +5,43 @@ import { status } from 'http-status';
 
 class CategoryController {
   static createCategory = catchAsync(async (req, res) => {
+    const existingCategory = await CategoryService.getCategoryByName(req.body.name)
+
+    if (existingCategory) {
+      throw new ApiError(status.BAD_REQUEST, 'Category already taken');
+    }
+
     const category = await CategoryService.createCategory(req.body);
+
+    const categoryResponse = {
+      id: category.id,
+      name: category.name,
+      isActive: category.isActive
+    }
 
     res.status(status.CREATED).send({
       status: status.CREATED,
       message: 'Create Category Success',
-      data: category,
+      data: categoryResponse,
     });
   });
 
-  static getCategorys = catchAsync(async (req, res) => {
+  static getCategories = catchAsync(async (req, res) => {
     const {page, size} = req.query;
 
-    const categorys = await CategoryService.queryCategorys(page, size);
+    const categories = await CategoryService.queryCategorys(page, size);
+
+    const categoriesResponse = categories.data.map(category => ({
+      id: category.id,
+      name: category.name,
+      isActive: category.isActive
+    }))
 
     res.status(status.OK).send({
       status: status.OK,
-      message: 'Get Categorys Success',
-      data: categorys.data,
-      pagination: categorys.pagination,
+      message: 'Get Categories Success',
+      data: categoriesResponse,
+      pagination: categories.pagination,
     });
   });
 
@@ -41,12 +59,24 @@ class CategoryController {
   });
 
   static updateCategory = catchAsync(async (req, res) => {
+    const existingCategory = await CategoryService.getCategoryByName(req.body.name)
+
+    if (existingCategory) {
+      throw new ApiError(status.BAD_REQUEST, 'Category already taken');
+    }
+    
     const category = await CategoryService.updateCategoryById(req.params.categoryId, req.body);
+
+    const categoryResponse = {
+      id: category.id,
+      name: category.name,
+      isActive: category.isActive
+    }
 
     res.status(status.OK).send({
       status: status.OK,
       message: 'Update Category Success',
-      data: category,
+      data: categoryResponse,
     });
   });
 

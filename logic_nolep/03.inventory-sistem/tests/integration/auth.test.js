@@ -8,7 +8,7 @@ import config from "../../src/config/config.js";
 import TokenService from "../../src/services/token.service.js";
 import tokenTypes from "../../src/config/tokens.js";
 import { userOne } from "../fixtures/user.fixture";
-import { userOneAccessToken } from "../fixtures/token.fixture";
+import { userOneAccessToken } from "../fixtures/token.fixture.js";
 import setUpTestDB from "../setupTestDB.js";
 import moment from "moment";
 import { randomUUID } from 'node:crypto';
